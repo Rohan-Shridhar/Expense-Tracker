@@ -57,6 +57,34 @@ app.post("/api/expenses", (req,res) => {
     return res.status(201)
     .json({ message: "Expense added successfully." });
 });
+// Delete an expense from the database
+app.delete("/api/expenses/:id", (req,res) => {
+    const id = Number(req.params.id);
+
+    if(!Number.isFinite(id)  || id <= 0){
+        return res.status(400)
+        .json({
+            error: "Invalid expense ID"
+        });
+    }
+
+    const result = db.prepare(
+        "DELETE FROM expenses WHERE id = ?"
+    );
+    result.run(id);
+
+    if(result.changes === 0){
+        return res.status(404)
+        .json({
+            error: `Expense with id ${id} not found`
+        });
+    }
+
+    return res.status(200)
+    .json({
+        message: `Expense with ${id} deleted successfully`
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
