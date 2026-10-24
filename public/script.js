@@ -10,7 +10,7 @@ const categoryFilter = document.getElementById("filter-category");
 const searchInput = document.getElementById("search-input");
 
 let categoryChart = null;
-
+let monthlyChart = null;
 
 const budgetForm = document.getElementById("budget-form");
 const budgetAmountInput = document.getElementById("budget-amount");
@@ -123,6 +123,68 @@ function displayExpenses(expenses) {
             }
         });
     }
+        
+    const monthlyTotals = {};
+
+    expenses.forEach((expense) => {
+        const month = expense.date.slice(0, 7); // YYYY-MM
+        monthlyTotals[month] = (monthlyTotals[month] || 0) + expense.amount;
+    });
+
+    const monthlyLabels = Object.keys(monthlyTotals).sort();
+    const monthlyValues = monthlyLabels.map((month) => monthlyTotals[month]);
+
+    const monthlyCanvas = document.getElementById("monthly-chart");
+
+    if (monthlyCanvas && window.Chart) {
+        if (monthlyChart) {
+            monthlyChart.destroy();
+        }
+
+        monthlyChart = new Chart(monthlyCanvas, {
+            type: "bar",
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: "Monthly Spending (₹)",
+                    data: monthlyValues,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Amount (₹)"
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Month"
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label(context) {
+                                return `Spent: ₹${context.parsed.y.toFixed(2)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
 
     totalExpenses.textContent =
         `Total spent: ₹${total.toFixed(2)} (${expenses.length} expenses)`;

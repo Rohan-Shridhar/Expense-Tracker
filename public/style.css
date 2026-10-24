@@ -377,3 +377,15 @@ body.dark-mode #charts-section {
 #theme-toggle:hover {
     background: #1f2937;
 }
+
+#charts-section .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    height: 320px;
+    margin: 24px auto;
+}
+
+#charts-section .chart-container h3 {
+    margin-bottom: 16px;
+}
