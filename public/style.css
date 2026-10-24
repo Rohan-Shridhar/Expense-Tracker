@@ -257,3 +257,30 @@ button:hover {
     height: 320px;
     margin: 0 auto;
 }
+
+#budget-section {
+    grid-column: 1 / -1;
+}
+
+#budget-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+#budget-summary {
+    display: grid;
+    gap: 10px;
+}
+
+#budget-progress {
+    width: 100%;
+    height: 18px;
+    accent-color: #16a34a;
+}
+
+#budget-remaining {
+    font-weight: 700;
+}
