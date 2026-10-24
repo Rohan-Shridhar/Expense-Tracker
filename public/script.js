@@ -23,6 +23,21 @@ let monthlyBudget = Number(localStorage.getItem("monthlyBudget")) || 0;
 budgetAmountInput.value = monthlyBudget || "";
 
 
+function showToast(message, type = "success") {
+    const container = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+
+    toast.className = `toast ${type === "error" ? "error" : ""}`;
+    toast.setAttribute("role", type === "error" ? "alert" : "status");
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
 // Load and display expenses
 async function loadExpenses() {
     try {
@@ -179,6 +194,7 @@ function displayExpenses(expenses) {
 // Add a new expense
 expenseForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const wasEditing = Boolean(expenseForm.dataset.editingId);
 
     const expense = {
         title: document.getElementById("title").value.trim(),
@@ -214,11 +230,17 @@ expenseForm.addEventListener("submit", async (event) => {
 
     expenseForm.querySelector('button[type="submit"]').textContent =
         "Add Expense";
+
     cancelEditButton.hidden = true;
+
+    showToast(wasEditing
+        ? "Expense updated successfully!"
+        : "Expense added successfully!");
+
     await loadExpenses();
     } catch (error) {
         console.error("Error adding expense:", error);
-        alert(error.message);
+        showToast(error.message, "error");;
     }
 });
 
@@ -244,7 +266,7 @@ async function deleteExpense(id) {
         await loadExpenses();
     } catch (error) {
         console.error("Error deleting expense:", error);
-        alert(error.message);
+        showToast(error.message, "error");;
     }
 }
 

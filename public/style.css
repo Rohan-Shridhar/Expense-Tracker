@@ -284,3 +284,39 @@ button:hover {
 #budget-remaining {
     font-weight: 700;
 }
+
+#toast-container {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(350px, calc(100vw - 40px));
+}
+
+.toast {
+    padding: 14px 18px;
+    border-radius: 8px;
+    color: white;
+    background: #15803d;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    animation: toast-in 0.2s ease-out;
+    overflow-wrap: anywhere;
+}
+
+.toast.error {
+    background: #dc2626;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
