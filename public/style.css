@@ -113,3 +113,46 @@ button:hover {
         padding: 20px 12px;
     }
 }
+
+
+.expense-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.expense-details {
+    min-width: 0;
+}
+
+.expense-details h3 {
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.expense-details p {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.expense-details .expense-amount {
+    color: #15803d;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.delete-button {
+    background: #dc2626;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+.delete-button:hover {
+    background: #b91c1c;
+}
