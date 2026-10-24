@@ -15,6 +15,7 @@ app.get("/api/health", (req,res) => {
         message: "Express API is healthy"
     });
 });
+
 // Retrive all expenses from the database
 app.get("/api/expenses", (req,res) => {
     const expenses = db.prepare(
@@ -22,6 +23,7 @@ app.get("/api/expenses", (req,res) => {
     ).all();
     res.json(expenses);
 });
+
 // Add a new expense to the database
 app.post("/api/expenses", (req,res) => {
     const { title, amount, category, date } = req.body;
@@ -30,7 +32,7 @@ app.post("/api/expenses", (req,res) => {
         return res.status(400)
         .json({ error: "Title is required and must be a non-empty string." });  
     }
-    if(!amount || typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0){
+    if(typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0){
         return res.status(400)
         .json({ error: "Amount is required and must be a finite positive number." });  
     }
@@ -51,12 +53,12 @@ app.post("/api/expenses", (req,res) => {
 
     const expense = db.prepare(
         "SELECT * FROM expenses WHERE id = ?"
-    );
-    expense.get(result.lastInsertRowid);
+    ).get(result.lastInsertRowid);
 
     return res.status(201)
     .json({ message: "Expense added successfully." });
 });
+
 // Delete an expense from the database
 app.delete("/api/expenses/:id", (req,res) => {
     const id = Number(req.params.id);
