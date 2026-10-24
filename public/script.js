@@ -6,6 +6,7 @@ const expenseList = document.getElementById("expense-list");
 const totalExpenses = document.getElementById("total-expenses");
 const startDateInput = document.getElementById("start-date");
 const endDateInput = document.getElementById("end-date");
+const categoryFilter = document.getElementById("filter-category");
 
 // Load and display expenses
 async function loadExpenses() {
@@ -176,10 +177,15 @@ document.getElementById("filter-button").addEventListener("click", async () => {
         }
 
         const expenses = await response.json();
+        const selectedCategory = categoryFilter.value;
 
         const filteredExpenses = expenses.filter((expense) => {
-            return (!startDate || expense.date >= startDate) &&
-                    (!endDate || expense.date <= endDate);
+            const matchesStartDate = !startDate || expense.date >= startDate;
+            const matchesEndDate = !endDate || expense.date <= endDate;
+            const matchesCategory =
+                !selectedCategory || expense.category === selectedCategory;
+
+            return matchesStartDate && matchesEndDate && matchesCategory;
         });
 
         displayExpenses(filteredExpenses);
@@ -192,6 +198,7 @@ document.getElementById("filter-button").addEventListener("click", async () => {
 document.getElementById("clear-filter-button").addEventListener("click", () => {
     startDateInput.value = "";
     endDateInput.value = "";
+    categoryFilter.value = "";
     loadExpenses();
 });
 
