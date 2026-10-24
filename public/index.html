@@ -63,6 +63,21 @@
 
         <section id="expense-list-section">
             <h2>Your Expenses</h2>
+        <div id="date-filters">
+            <div>
+                <label for="start-date">From</label>
+                <input type="date" id="start-date">
+            </div>
+
+            <div>
+                <label for="end-date">To</label>
+                <input type="date" id="end-date">
+            </div>
+
+            <button type="button" id="filter-button">Apply Filter</button>
+            <button type="button" id="clear-filter-button">Clear</button>
+        </div>
+
             <p id="total-expenses">Loading expenses...</p>
             <div id="expense-list"></div>
         </section>

@@ -4,6 +4,8 @@ const API_URL = "http://localhost:3000/api/expenses";
 const expenseForm = document.getElementById("expense-form");
 const expenseList = document.getElementById("expense-list");
 const totalExpenses = document.getElementById("total-expenses");
+const startDateInput = document.getElementById("start-date");
+const endDateInput = document.getElementById("end-date");
 
 // Load and display expenses
 async function loadExpenses() {
@@ -155,6 +157,44 @@ async function deleteExpense(id) {
         alert(error.message);
     }
 }
+
+
+document.getElementById("filter-button").addEventListener("click", async () => {
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+
+    if (startDate && endDate && startDate > endDate) {
+        alert("The start date cannot be after the end date.");
+        return;
+    }
+
+    try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch expenses");
+        }
+
+        const expenses = await response.json();
+
+        const filteredExpenses = expenses.filter((expense) => {
+            return (!startDate || expense.date >= startDate) &&
+                    (!endDate || expense.date <= endDate);
+        });
+
+        displayExpenses(filteredExpenses);
+    } catch (error) {
+        console.error("Error filtering expenses:", error);
+        alert("Unable to filter expenses. Please try again.");
+    }
+});
+
+document.getElementById("clear-filter-button").addEventListener("click", () => {
+    startDateInput.value = "";
+    endDateInput.value = "";
+    loadExpenses();
+});
+
 
 // Load expenses when the page opens
 loadExpenses();

@@ -193,3 +193,38 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+
+
+#date-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+#date-filters label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#date-filters input {
+    margin-bottom: 0;
+}
+
+#date-filters button {
+    padding: 10px;
+}
+
+#clear-filter-button {
+    background: #6b7280;
+}
+
+#clear-filter-button:hover {
+    background: #4b5563;
+}
+
+@media (max-width: 400px) {
+    #date-filters {
+        grid-template-columns: 1fr;
+    }
+}
