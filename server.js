@@ -56,14 +56,14 @@ app.post("/api/expenses", (req,res) => {
     ).get(result.lastInsertRowid);
 
     return res.status(201)
-    .json({ message: "Expense added successfully." });
+    .json(expense);
 });
 
 // Delete an expense from the database
 app.delete("/api/expenses/:id", (req,res) => {
     const id = Number(req.params.id);
 
-    if(!Number.isFinite(id)  || id <= 0){
+    if(!Number.isInteger(id)  || id <= 0){
         return res.status(400)
         .json({
             error: "Invalid expense ID"
@@ -72,8 +72,7 @@ app.delete("/api/expenses/:id", (req,res) => {
 
     const result = db.prepare(
         "DELETE FROM expenses WHERE id = ?"
-    );
-    result.run(id);
+    ).run(id);
 
     if(result.changes === 0){
         return res.status(404)
