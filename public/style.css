@@ -320,3 +320,60 @@ button:hover {
         transform: translateY(0);
     }
 }
+
+/* Smooth theme transitions */
+body,
+section,
+.summary-card,
+.expense-card,
+input,
+select {
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* Dark theme */
+body.dark-mode {
+    background: #111827;
+    color: #f3f4f6;
+}
+
+body.dark-mode section,
+body.dark-mode .summary-card,
+body.dark-mode .expense-card {
+    background: #1f2937;
+    color: #f3f4f6;
+    border-color: #374151;
+}
+
+body.dark-mode header p,
+body.dark-mode .expense-details p,
+body.dark-mode #total-expenses,
+body.dark-mode .summary-card p {
+    color: #d1d5db;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+    background: #111827;
+    color: #f3f4f6;
+    border-color: #4b5563;
+}
+
+body.dark-mode input::placeholder {
+    color: #9ca3af;
+}
+
+body.dark-mode #budget-section,
+body.dark-mode #charts-section {
+    background: transparent;
+}
+
+#theme-toggle {
+    margin-top: 16px;
+    padding: 9px 14px;
+    background: #374151;
+}
+
+#theme-toggle:hover {
+    background: #1f2937;
+}
