@@ -161,9 +161,11 @@ async function deleteExpense(id) {
 }
 
 
-document.getElementById("filter-button").addEventListener("click", async () => {
+async function applyFilters() {
     const startDate = startDateInput.value;
     const endDate = endDateInput.value;
+    const selectedCategory = categoryFilter.value;
+    const searchTerm = searchInput.value.trim().toLowerCase();
 
     if (startDate && endDate && startDate > endDate) {
         alert("The start date cannot be after the end date.");
@@ -179,16 +181,11 @@ document.getElementById("filter-button").addEventListener("click", async () => {
 
         const expenses = await response.json();
 
-        const selectedCategory = categoryFilter.value;
-        const searchTerm = searchInput.value.trim().toLowerCase();
-
         const filteredExpenses = expenses.filter((expense) => {
             const matchesStartDate = !startDate || expense.date >= startDate;
             const matchesEndDate = !endDate || expense.date <= endDate;
-
             const matchesCategory =
                 !selectedCategory || expense.category === selectedCategory;
-
             const matchesSearch =
                 expense.title.toLowerCase().includes(searchTerm);
 
@@ -203,16 +200,25 @@ document.getElementById("filter-button").addEventListener("click", async () => {
         console.error("Error filtering expenses:", error);
         alert("Unable to filter expenses. Please try again.");
     }
-});
+}
 
-document.getElementById("clear-filter-button").addEventListener("click", () => {
-    startDateInput.value = "";
-    endDateInput.value = "";
-    categoryFilter.value = "";
-    searchInput.value = "";
-    loadExpenses();
-});
+document.getElementById("filter-button")
+    .addEventListener("click", applyFilters);
 
+searchInput.addEventListener("input", applyFilters);
+categoryFilter.addEventListener("change", applyFilters);
+startDateInput.addEventListener("change", applyFilters);
+endDateInput.addEventListener("change", applyFilters);
+
+document.getElementById("clear-filter-button")
+    .addEventListener("click", () => {
+        startDateInput.value = "";
+        endDateInput.value = "";
+        categoryFilter.value = "";
+        searchInput.value = "";
+
+        loadExpenses();
+    });
 
 // Load expenses when the page opens
 loadExpenses();
