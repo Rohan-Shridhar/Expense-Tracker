@@ -1,10 +1,14 @@
 const express = require("express");
 const db = require("./database");
+const cors = require("cors");
 
 const app = express();
-app.use(express.static("public"));
 const PORT = 3000;
 
+app.use(cors({
+    origin: "http://127.0.0.1:5500"
+}));
+app.use(express.static("public"));
 app.use(express.json());
 app.get("/", (req,res) => {
     res.send("Express backend running.");
