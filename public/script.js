@@ -365,5 +365,72 @@ budgetForm.addEventListener("submit", (event) => {
     loadExpenses();
 });
 
+
+document.getElementById("export-button")
+    .addEventListener("click", async () => {
+        try {
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch expenses");
+            }
+
+            const expenses = await response.json();
+
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            const selectedCategory = categoryFilter.value;
+            const searchTerm = searchInput.value.trim().toLowerCase();
+
+            if (startDate && endDate && startDate > endDate) {
+                alert("The start date cannot be after the end date.");
+                return;
+            }
+
+            const filteredExpenses = expenses.filter((expense) => {
+                return (
+                    (!startDate || expense.date >= startDate) &&
+                    (!endDate || expense.date <= endDate) &&
+                    (!selectedCategory ||
+                        expense.category === selectedCategory) &&
+                    expense.title.toLowerCase().includes(searchTerm)
+                );
+            });
+
+            const escapeCSV = (value) =>
+                `"${String(value).replace(/"/g, '""')}"`;
+
+            const rows = [
+                ["ID", "Title", "Amount", "Category", "Date"],
+                ...filteredExpenses.map((expense) => [
+                    expense.id,
+                    expense.title,
+                    expense.amount,
+                    expense.category,
+                    expense.date
+                ])
+            ];
+
+            const csv = rows
+                .map((row) => row.map(escapeCSV).join(","))
+                .join("\r\n");
+
+            const blob = new Blob(["\uFEFF" + csv], {
+                type: "text/csv;charset=utf-8;"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "expenses.csv";
+            link.click();
+
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Error exporting expenses:", error);
+            alert("Unable to export expenses. Please try again.");
+        }
+    });
 // Load expenses when the page opens
 loadExpenses();
