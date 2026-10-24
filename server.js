@@ -21,6 +21,19 @@ app.get("/api/health", (req,res) => {
     });
 });
 
+// Validate date format (YYYY-MM-DD)
+function isValidDate(date) {
+    if (typeof date !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return false;
+    }
+
+    const parsedDate = new Date(`${date}T00:00:00Z`);
+
+    return !Number.isNaN(parsedDate.getTime()) &&
+        parsedDate.toISOString().slice(0, 10) === date;
+}
+
 // Retrive all expenses from the database
 app.get("/api/expenses", (req,res) => {
     const expenses = db.prepare(
@@ -45,7 +58,7 @@ app.post("/api/expenses", (req,res) => {
         return res.status(400)
         .json({ error: "Category is required and must be a non-empty string." });  
     }
-    if(!date || typeof date !== "string"  || !/^\d{4}-\d{2}-\d{2}$/.test(date)){
+    if (!isValidDate(date)) {
         return res.status(400)
         .json({ error: "Date is required and must use YYYY-MM-DD format" });  
     }
@@ -122,8 +135,7 @@ app.put("/api/expenses/:id", (req, res) => {
         });
     }
 
-    if (typeof date !== "string" ||
-        !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    if (!isValidDate(date)) {
         return res.status(400).json({
             error: "Date must use YYYY-MM-DD format"
         });
