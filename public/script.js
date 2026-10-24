@@ -11,6 +11,18 @@ const searchInput = document.getElementById("search-input");
 
 let categoryChart = null;
 
+
+const budgetForm = document.getElementById("budget-form");
+const budgetAmountInput = document.getElementById("budget-amount");
+
+const budgetSpent = document.getElementById("budget-spent");
+const budgetRemaining = document.getElementById("budget-remaining");
+const budgetProgress = document.getElementById("budget-progress");
+
+let monthlyBudget = Number(localStorage.getItem("monthlyBudget")) || 0;
+budgetAmountInput.value = monthlyBudget || "";
+
+
 // Load and display expenses
 async function loadExpenses() {
     try {
@@ -23,6 +35,7 @@ async function loadExpenses() {
         const expenses = await response.json();
 
         displayExpenses(expenses);
+        updateBudget(expenses);
     } catch (error) {
         console.error("Error loading expenses:", error);
         expenseList.textContent = "Unable to load expenses. Please try again.";
@@ -305,6 +318,51 @@ cancelEditButton.addEventListener("click", () => {
         "Add Expense";
 
     cancelEditButton.hidden = true;
+});
+
+
+function updateBudget(expenses) {
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(
+        now.getMonth() + 1
+    ).padStart(2, "0")}`;
+
+    const monthlySpent = expenses
+        .filter((expense) => expense.date.startsWith(currentMonth))
+        .reduce((sum, expense) => sum + expense.amount, 0);
+
+    const remaining = monthlyBudget - monthlySpent;
+
+    budgetSpent.textContent = `Spent this month: ₹${monthlySpent.toFixed(2)}`;
+    budgetRemaining.textContent =
+        `Remaining: ₹${remaining.toFixed(2)}`;
+
+    budgetProgress.value = monthlyBudget > 0
+        ? Math.min((monthlySpent / monthlyBudget) * 100, 100)
+        : 0;
+
+    budgetProgress.max = 100;
+
+    budgetProgress.style.accentColor =
+        monthlyBudget > 0 && monthlySpent > monthlyBudget
+            ? "#dc2626"
+            : "#16a34a";
+}
+
+budgetForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const amount = Number(budgetAmountInput.value);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Please enter a valid budget greater than zero.");
+        return;
+    }
+
+    monthlyBudget = amount;
+    localStorage.setItem("monthlyBudget", String(monthlyBudget));
+
+    loadExpenses();
 });
 
 // Load expenses when the page opens

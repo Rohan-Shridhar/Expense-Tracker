@@ -32,6 +32,29 @@
             </div>
         </section>
         
+        <section id="budget-section">
+            <h2>Monthly Budget</h2>
+
+            <form id="budget-form">
+                <label for="budget-amount">Set monthly budget (₹)</label>
+                <input
+                    type="number"
+                    id="budget-amount"
+                    min="1"
+                    step="0.01"
+                    placeholder="e.g. 10000"
+                    required
+                >
+                <button type="submit">Save Budget</button>
+            </form>
+
+            <div id="budget-summary">
+                <p id="budget-spent">Spent: ₹0.00</p>
+                <p id="budget-remaining">Remaining: ₹0.00</p>
+                <progress id="budget-progress" value="0" max="100"></progress>
+            </div>
+        </section>
+
         <section id="charts-section">
             <h2>Spending Overview</h2>
             <div class="chart-container">
