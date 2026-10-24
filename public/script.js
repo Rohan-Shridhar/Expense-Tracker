@@ -91,6 +91,7 @@ function displayExpenses(expenses) {
         editButton.className = "edit-button";
 
         editButton.addEventListener("click", () => {
+            document.getElementById("cancel-edit-button").hidden = false;
             document.getElementById("title").value = expense.title;
             document.getElementById("amount").value = expense.amount;
             document.getElementById("category").value = expense.category;
@@ -161,7 +162,7 @@ expenseForm.addEventListener("submit", async (event) => {
 
     expenseForm.querySelector('button[type="submit"]').textContent =
         "Add Expense";
-
+    cancelEditButton.hidden = true;
     await loadExpenses();
     } catch (error) {
         console.error("Error adding expense:", error);
@@ -254,6 +255,18 @@ document.getElementById("clear-filter-button")
 
         loadExpenses();
     });
+
+const cancelEditButton = document.getElementById("cancel-edit-button");
+
+cancelEditButton.addEventListener("click", () => {
+    expenseForm.reset();
+    delete expenseForm.dataset.editingId;
+
+    expenseForm.querySelector('button[type="submit"]').textContent =
+        "Add Expense";
+
+    cancelEditButton.hidden = true;
+});
 
 // Load expenses when the page opens
 loadExpenses();
