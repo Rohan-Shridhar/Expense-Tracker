@@ -228,3 +228,20 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+
+.expense-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.edit-button {
+    background: #2563eb;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+}
+
+.edit-button:hover {
+    background: #1d4ed8;
+}
