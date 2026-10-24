@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Rohan-Shridhar/Expense-Tracker#readme",
   "dependencies": {
+    "better-sqlite3": "^13.0.3",
     "express": "^5.3.0"
   }
 }
