@@ -454,5 +454,36 @@ document.getElementById("export-button")
             alert("Unable to export expenses. Please try again.");
         }
     });
+
+
+const themeToggle = document.getElementById("theme-toggle");
+
+// Restore the saved theme when the page opens
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+}
+
+function updateThemeButton() {
+    const isDark = document.body.classList.contains("dark-mode");
+
+    themeToggle.textContent = isDark
+        ? "☀️ Light Mode"
+        : "🌙 Dark Mode";
+}
+
+updateThemeButton();
+
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    const isDark = document.body.classList.contains("dark-mode");
+
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+
+    updateThemeButton();
+});
+
 // Load expenses when the page opens
 loadExpenses();
