@@ -3,7 +3,7 @@ const db = require("./database");
 const cors = require("cors");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors({
     origin: "http://127.0.0.1:5500"
