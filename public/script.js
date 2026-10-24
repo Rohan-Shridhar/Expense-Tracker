@@ -9,6 +9,8 @@ const endDateInput = document.getElementById("end-date");
 const categoryFilter = document.getElementById("filter-category");
 const searchInput = document.getElementById("search-input");
 
+let categoryChart = null;
+
 // Load and display expenses
 async function loadExpenses() {
     try {
@@ -56,6 +58,43 @@ function displayExpenses(expenses) {
     document.getElementById("dashboard-category").textContent =
         topCategory ? topCategory[0] : "—";
 
+    const chartCanvas = document.getElementById("category-chart");
+
+    if (chartCanvas && window.Chart) {
+        const labels = Object.keys(categoryTotals);
+        const values = Object.values(categoryTotals);
+
+        if (categoryChart) {
+            categoryChart.destroy();
+        }
+
+        categoryChart = new Chart(chartCanvas, {
+            type: "doughnut",
+            data: {
+                labels,
+                datasets: [{
+                    label: "Spending",
+                    data: values
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label(context) {
+                                return `${context.label}: ₹${context.parsed.toFixed(2)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     totalExpenses.textContent =
         `Total spent: ₹${total.toFixed(2)} (${expenses.length} expenses)`;
