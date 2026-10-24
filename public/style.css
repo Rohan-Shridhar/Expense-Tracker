@@ -156,3 +156,40 @@ button:hover {
 .delete-button:hover {
     background: #b91c1c;
 }
+
+
+#dashboard {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+}
+
+.summary-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #16a34a;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    min-width: 0;
+}
+
+.summary-card p {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.summary-card h2 {
+    margin: 8px 0 0;
+    font-size: 1.5rem;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 650px) {
+    #dashboard {
+        grid-template-columns: 1fr;
+    }
+}

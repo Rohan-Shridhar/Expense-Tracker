@@ -32,6 +32,26 @@ function displayExpenses(expenses) {
         (sum, expense) => sum + expense.amount,
         0
     );
+        
+    document.getElementById("dashboard-total").textContent =
+        `₹${total.toFixed(2)}`;
+
+    document.getElementById("dashboard-count").textContent =
+        expenses.length;
+
+    const categoryTotals = {};
+
+    expenses.forEach((expense) => {
+        categoryTotals[expense.category] =
+            (categoryTotals[expense.category] || 0) + expense.amount;
+    });
+
+    const topCategory = Object.entries(categoryTotals)
+        .sort((a, b) => b[1] - a[1])[0];
+
+    document.getElementById("dashboard-category").textContent =
+        topCategory ? topCategory[0] : "—";
+
 
     totalExpenses.textContent =
         `Total spent: ₹${total.toFixed(2)} (${expenses.length} expenses)`;
