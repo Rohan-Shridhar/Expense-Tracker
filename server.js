@@ -92,6 +92,62 @@ app.delete("/api/expenses/:id", (req,res) => {
     });
 });
 
+// Update an expense in the database
+app.put("/api/expenses/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const { title, amount, category, date } = req.body;
+
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({
+            error: "Invalid expense ID"
+        });
+    }
+
+    if (typeof title !== "string" || !title.trim()) {
+        return res.status(400).json({
+            error: "Title is required"
+        });
+    }
+
+    if (typeof amount !== "number" ||
+        !Number.isFinite(amount) || amount <= 0) {
+        return res.status(400).json({
+            error: "Amount must be a positive number"
+        });
+    }
+
+    if (typeof category !== "string" || !category.trim()) {
+        return res.status(400).json({
+            error: "Category is required"
+        });
+    }
+
+    if (typeof date !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return res.status(400).json({
+            error: "Date must use YYYY-MM-DD format"
+        });
+    }
+
+    const result = db.prepare(`
+        UPDATE expenses
+        SET title = ?, amount = ?, category = ?, date = ?
+        WHERE id = ?
+    `).run(title.trim(), amount, category.trim(), date, id);
+
+    if (result.changes === 0) {
+        return res.status(404).json({
+            error: `Expense with ID ${id} not found`
+        });
+    }
+
+    const updatedExpense = db.prepare(
+        "SELECT * FROM expenses WHERE id = ?"
+    ).get(id);
+
+    return res.json(updatedExpense);
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

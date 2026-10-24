@@ -85,6 +85,25 @@ function displayExpenses(expenses) {
         amount.className = "expense-amount";
         amount.textContent = `₹${expense.amount.toFixed(2)}`;
 
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.textContent = "Edit";
+        editButton.className = "edit-button";
+
+        editButton.addEventListener("click", () => {
+            document.getElementById("title").value = expense.title;
+            document.getElementById("amount").value = expense.amount;
+            document.getElementById("category").value = expense.category;
+            document.getElementById("date").value = expense.date;
+
+            expenseForm.dataset.editingId = expense.id;
+
+            expenseForm.querySelector('button[type="submit"]').textContent =
+                "Save Changes";
+
+            expenseForm.scrollIntoView({ behavior: "smooth" });
+        });
+
         const deleteButton = document.createElement("button");
         deleteButton.type = "button";
         deleteButton.textContent = "Delete";
@@ -95,7 +114,11 @@ function displayExpenses(expenses) {
         });
 
         details.append(title, info, amount);
-        card.append(details, deleteButton);
+        const actions = document.createElement("div");
+        actions.className = "expense-actions";
+        actions.append(editButton, deleteButton);
+
+        card.append(details, actions);
         expenseList.appendChild(card);
     });
 }
@@ -112,8 +135,16 @@ expenseForm.addEventListener("submit", async (event) => {
     };
 
     try {
-        const response = await fetch(API_URL, {
-            method: "POST",
+        const editingId = expenseForm.dataset.editingId;
+
+        const url = editingId
+            ? `${API_URL}/${editingId}`
+            : API_URL;
+
+        const method = editingId ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -125,9 +156,13 @@ expenseForm.addEventListener("submit", async (event) => {
         if (!response.ok) {
             throw new Error(result.error || "Failed to add expense");
         }
+    expenseForm.reset();
+    delete expenseForm.dataset.editingId;
 
-        expenseForm.reset();
-        await loadExpenses();
+    expenseForm.querySelector('button[type="submit"]').textContent =
+        "Add Expense";
+
+    await loadExpenses();
     } catch (error) {
         console.error("Error adding expense:", error);
         alert(error.message);
