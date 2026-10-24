@@ -2,10 +2,10 @@ const express = require("express");
 const db = require("./database");
 
 const app = express();
+app.use(express.static("public"));
 const PORT = 3000;
 
 app.use(express.json());
-app.use(express.static("public"));
 app.get("/", (req,res) => {
     res.send("Express backend running.");
 });
