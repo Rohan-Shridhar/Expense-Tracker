@@ -1,4 +1,6 @@
 const express = require("express");
+const db = require("./database");
+
 const app = express();
 const PORT = 3000;
 
@@ -12,6 +14,13 @@ app.get("/api/health", (req,res) => {
         status: "OK",
         message: "Express API is healthy"
     });
+});
+
+app.get("/api/expenses", (req,res) => {
+    const expenses = db.prepare(
+        "SELECT * FROM expenses ORDER BY date DESC"
+    ).all();
+    res.json(expenses);
 });
 
 app.listen(PORT, () => {
