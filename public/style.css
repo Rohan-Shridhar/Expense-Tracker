@@ -245,3 +245,15 @@ button:hover {
 .edit-button:hover {
     background: #1d4ed8;
 }
+
+#charts-section {
+    grid-column: 1 / -1;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 320px;
+    margin: 0 auto;
+}
